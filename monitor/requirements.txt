@@ -1,0 +1,7 @@
+django
+
+# PostgresSQL
+psycopg2
+
+# Rest Framework
+djangorestframework==3.7.7
