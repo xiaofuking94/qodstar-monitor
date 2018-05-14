@@ -19,13 +19,13 @@ from django.conf.urls import include, url
 
 from rest_framework.routers import DefaultRouter
 
-from date_data.views import DateDateViewSet
-
-router = DefaultRouter()
-
-router.register(r'date-date_data', DateDateViewSet, base_name='date_data')
+from date_data.views import date_data
+#
+# router = DefaultRouter()
+#
+# router.register(r'date-data', date_data, base_name='date_data')
 
 urlpatterns = [
     # path('admin/', admin.site.urls),
-    url(r'', include(router.urls)),
+    url(r'date-data', date_data, name='date_data'),
 ]

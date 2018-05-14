@@ -10,21 +10,27 @@ today = datetime.datetime.today().date()
 yestoday = (today - datetime.timedelta(days=1)).strftime('%Y-%m-%d')
 with psycopg2.connect(database='qodstar_dev') as conn:
 	with conn.cursor() as cursor:
+		# 真实用户
 		cursor.execute("select count(distinct i1.owner_id) from invitations_invitation i1 where not EXISTS (select * from invitations_invitation i2 where i2.status >=1 and i2.created <= '{}' and i1.owner_id = i2.owner_id) and i1.created > '{}' and i1.status>=1".format(yestoday, yestoday))
 		real_user_amount = cursor.fetchone()[0]
 		
+		# 潜在用户
 		cursor.execute("select count(distinct owner_id) from conversations_sequenceprogress where created >= '{}'".format(yestoday))
 		potential_user_amount = cursor.fetchone()[0]
 		
+		# 新用户，已注册的用户
 		cursor.execute("select count(distinct owner_id) from companies_company where  created >='{}'".format(yestoday))
 		new_user_amount = cursor.fetchone()[0]
 		
+		# 每天新增的企业用户
 		cursor.execute("select count(DISTINCT owner_id) from companies_company where companies_company.created >= '{}'".format(yestoday))
 		increased_user_amount = cursor.fetchone()[0]
 		
+		# 新增职位
 		cursor.execute("select count(DISTINCT id) from jobposts_jobpost where created >= '{}'".format(yestoday))
 		jobpost_amount = cursor.fetchone()[0]
 		
+		# 每天邀请发送的数量
 		cursor.execute("select count(DISTINCT id) from invitations_invitation where test_sent >= '{}'".format(yestoday))
 		invitation_sent_amount = cursor.fetchone()[0]
 	
